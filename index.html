@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>七宗町 星空観測</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🌌 七宗町 星空観測</h1>
+    
+    <!-- 現在時刻 -->
+    <div class="card">
+      <h2>📅 現在時刻</h2>
+      <p id="current-time">--</p>
+    </div>
+
+    <!-- 月の情報 -->
+    <div class="card">
+      <h2>🌙 月の情報</h2>
+      <p id="moon-phase">計算中...</p>
+      <p id="moon-rise">月の出: --</p>
+      <p id="moon-set">月の入り: --</p>
+    </div>
+
+    <!-- 日の出・日の入り -->
+    <div class="card">
+      <h2>☀️ 太陽</h2>
+      <p id="sunrise">日の出: --</p>
+      <p id="sunset">日の入り: --</p>
+    </div>
+
+    <!-- 今夜のおすすめ天体 -->
+    <div class="card">
+      <h2>⭐ 今夜のおすすめ天体</h2>
+      <ul id="star-list"></ul>
+    </div>
+
+    <!-- 観測条件 -->
+    <div class="card">
+      <h2>🔭 観測のヒント</h2>
+      <p id="observation-tip"></p>
+    </div>
+
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
