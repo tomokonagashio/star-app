@@ -171,29 +171,42 @@ function getMoonRiseSet() {
 
 // 簡易AR機能
 function startAR() {
-  if (typeof DeviceOrientationEvent !== 'undefined' &&
-      typeof DeviceOrientationEvent.requestPermission === 'function') {
-    DeviceOrientationEvent.requestPermission()
-      .then(response => {
-        if (response === 'granted') {
-          document.getElementById('ar-display').style.display = 'block';
-          document.getElementById('ar-btn').textContent = 'AR起動中...';
-          window.addEventListener('deviceorientation', handleOrientation);
-        } else {
-          alert('センサーの許可が必要です！');
-        }
-      })
-      .catch(err => alert('エラー: ' + err));
+  // iOSの場合は許可が必要
+  if (window.DeviceOrientationEvent) {
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+      // iOS 13以上
+      DeviceOrientationEvent.requestPermission()
+        .then(permissionState => {
+          if (permissionState === 'granted') {
+            activateAR();
+          } else {
+            alert('モーションセンサーの許可が必要です。\n設定→Safari→モーションと画面の向きをオンにしてください。');
+          }
+        })
+        .catch(error => {
+          // ユーザーのジェスチャーが必要なためリトライ
+          alert('もう一度「ARを起動する」をタップしてください。');
+        });
+    } else {
+      // Android等
+      activateAR();
+    }
   } else {
-    document.getElementById('ar-display').style.display = 'block';
-    document.getElementById('ar-btn').textContent = 'AR起動中...';
-    window.addEventListener('deviceorientation', handleOrientation);
+    alert('このデバイスはARに対応していません。');
   }
+}
+
+function activateAR() {
+  document.getElementById('ar-display').style.display = 'block';
+  document.getElementById('ar-btn').textContent = '🔴 AR起動中';
+  document.getElementById('ar-btn').style.background =
+    'linear-gradient(135deg, #ff6b6b, #ee5a24)';
+  window.addEventListener('deviceorientation', handleOrientation, true);
 }
 
 // 方角を文字に変換
 function getDirectionName(alpha) {
-  if (alpha === null) return '--';
+  if (alpha === null || alpha === undefined) return '--';
   const dirs = ['北','北北東','北東','東北東','東','東南東','南東','南南東',
                  '南','南南西','南西','西南西','西','西北西','北西','北北西'];
   const index = Math.round(alpha / 22.5) % 16;
@@ -238,9 +251,8 @@ function getConstellation(direction, altitude) {
 
 // センサーの値を処理
 function handleOrientation(event) {
-  const alpha = event.alpha; // 方位角
-  const beta  = event.beta;  // 前後の傾き
-  const gamma = event.gamma; // 左右の傾き
+  const alpha = event.alpha;
+  const beta  = event.beta;
 
   const direction = getDirectionName(alpha);
   const altitude  = Math.round(Math.abs(beta));
