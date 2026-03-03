@@ -68,3 +68,41 @@ ul li:last-child {
   color: #a0c4ff;
   text-align: center;
 }
+
+#ar-btn {
+  background: linear-gradient(135deg, #a0c4ff, #6a9fd8);
+  color: #0a0a2e;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 10px 0;
+  width: 100%;
+  cursor: pointer;
+}
+
+#ar-btn:active {
+  opacity: 0.8;
+}
+
+#ar-display {
+  margin-top: 16px;
+  padding: 16px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  text-align: center;
+}
+
+#ar-constellation {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #ffd6a5;
+  margin-top: 8px;
+  text-shadow: 0 0 10px #ffd6a5;
+}
+
+#ar-direction, #ar-altitude {
+  font-size: 0.95rem;
+  color: #a0c4ff;
+}
