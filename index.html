@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>七宗町 星空観測</title>
+  <title>神渕星空観測アプリ</title>
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
-    <h1>🌌 七宗町 星空観測</h1>
-    
+    <h1>🌌 神渕星空観測アプリ</h1>
+
     <!-- 現在時刻 -->
     <div class="card">
       <h2>📅 現在時刻</h2>
@@ -42,6 +42,18 @@
     <div class="card">
       <h2>🔭 観測のヒント</h2>
       <p id="observation-tip"></p>
+    </div>
+
+    <!-- 簡易AR -->
+    <div class="card" id="ar-card">
+      <h2>📱 簡易AR 星座ファインダー</h2>
+      <p>スマホを空にかざしてください！</p>
+      <button id="ar-btn" onclick="startAR()">ARを起動する</button>
+      <div id="ar-display" style="display:none;">
+        <p id="ar-direction">方角: --</p>
+        <p id="ar-altitude">仰角: --</p>
+        <p id="ar-constellation">🌟 --</p>
+      </div>
     </div>
 
   </div>
