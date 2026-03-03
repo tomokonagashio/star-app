@@ -169,6 +169,91 @@ function getMoonRiseSet() {
     `🌛 月の入り: ${toTimeStr(moonSet)}（概算）`;
 }
 
+// 簡易AR機能
+function startAR() {
+  if (typeof DeviceOrientationEvent !== 'undefined' &&
+      typeof DeviceOrientationEvent.requestPermission === 'function') {
+    DeviceOrientationEvent.requestPermission()
+      .then(response => {
+        if (response === 'granted') {
+          document.getElementById('ar-display').style.display = 'block';
+          document.getElementById('ar-btn').textContent = 'AR起動中...';
+          window.addEventListener('deviceorientation', handleOrientation);
+        } else {
+          alert('センサーの許可が必要です！');
+        }
+      })
+      .catch(err => alert('エラー: ' + err));
+  } else {
+    document.getElementById('ar-display').style.display = 'block';
+    document.getElementById('ar-btn').textContent = 'AR起動中...';
+    window.addEventListener('deviceorientation', handleOrientation);
+  }
+}
+
+// 方角を文字に変換
+function getDirectionName(alpha) {
+  if (alpha === null) return '--';
+  const dirs = ['北','北北東','北東','東北東','東','東南東','南東','南南東',
+                 '南','南南西','南西','西南西','西','西北西','北西','北北西'];
+  const index = Math.round(alpha / 22.5) % 16;
+  return dirs[index];
+}
+
+// 方角と仰角から星座を推定
+function getConstellation(direction, altitude) {
+  const month = new Date().getMonth() + 1;
+
+  if (altitude > 60) {
+    return '天頂付近 ✨ 頭上の星座を探してみよう！';
+  }
+
+  if (direction === '南' || direction === '南南東' || direction === '南南西') {
+    if (month >= 6 && month <= 8) return '🦂 さそり座（南の空）';
+    if (month >= 9 && month <= 11) return '♑ やぎ座（南の空）';
+    if (month >= 12 || month <= 2) return '🐂 おうし座（南の空）';
+    if (month >= 3 && month <= 5) return '♍ おとめ座（南の空）';
+  }
+
+  if (direction === '東' || direction === '東南東' || direction === '東北東') {
+    if (month >= 6 && month <= 8) return '🦅 わし座・アルタイル（東の空）';
+    if (month >= 9 && month <= 11) return '🐟 うお座（東の空）';
+    if (month >= 12 || month <= 2) return '♊ ふたご座（東の空）';
+    if (month >= 3 && month <= 5) return '🦁 しし座（東の空）';
+  }
+
+  if (direction === '西' || direction === '西南西' || direction === '西北西') {
+    if (month >= 6 && month <= 8) return '🌸 うしかい座（西の空）';
+    if (month >= 9 && month <= 11) return '🦁 しし座（西の空）';
+    if (month >= 12 || month <= 2) return '🦅 わし座（西の空）';
+    if (month >= 3 && month <= 5) return '♊ ふたご座（西の空）';
+  }
+
+  if (direction === '北' || direction === '北北東' || direction === '北北西') {
+    return '⭐ カシオペヤ座・北極星（北の空）';
+  }
+
+  return '✨ スマホをゆっくり動かしてみてください！';
+}
+
+// センサーの値を処理
+function handleOrientation(event) {
+  const alpha = event.alpha; // 方位角
+  const beta  = event.beta;  // 前後の傾き
+  const gamma = event.gamma; // 左右の傾き
+
+  const direction = getDirectionName(alpha);
+  const altitude  = Math.round(Math.abs(beta));
+  const constellation = getConstellation(direction, altitude);
+
+  document.getElementById('ar-direction').textContent =
+    `🧭 方角: ${direction}（${Math.round(alpha)}°）`;
+  document.getElementById('ar-altitude').textContent =
+    `📐 仰角: ${altitude}°`;
+  document.getElementById('ar-constellation').textContent =
+    constellation;
+}
+
 // 初期化
 function init() {
   updateTime();
